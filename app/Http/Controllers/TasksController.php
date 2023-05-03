@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class TaskController extends Controller
+class TasksController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        // $tasks = Task::all()->sortBy([
+        //     ['created_at', 'desc']
+        // ]);;
+        // return view('todo.index', compact('tasks'));
+
+        $tasks = DB::table('tasks')->get();
+        return view('tasks.index', ['tasks' => $tasks]);
     }
 
     /**
