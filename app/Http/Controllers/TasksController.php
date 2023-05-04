@@ -14,10 +14,6 @@ class TasksController extends Controller
      */
     public function index(): View
     {
-        // $tasks = Task::all()->sortBy([
-        //     ['created_at', 'desc']
-        // ]);;
-        // return view('todo.index', compact('tasks'));
 
         $tasks = DB::table('tasks')->get();
         return view('tasks.index', ['tasks' => $tasks]);

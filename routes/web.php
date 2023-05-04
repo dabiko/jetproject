@@ -28,6 +28,10 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
+    Route::get('/items', function () {
+        return view('items');
+    })->name('items');
+
     Route::get('/tasks', function () {
         return view('tasks');
     })->name('tasks');
