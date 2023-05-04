@@ -3,6 +3,8 @@
 namespace App\Http\Livewire;
 
 use App\Models\Item;
+use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -21,6 +23,9 @@ class Items extends Component
 
     public $confirmingItemAddition;
     public $itemAdd;
+
+    public $confirmingItemEditing;
+    public $itemEdit;
 
     public $name;
     public $price;
@@ -87,7 +92,12 @@ class Items extends Component
 
         $this->confirmingItemAddition = false;
         $this->itemAdd = false;
+
+       $this->confirmingItemEditing = false;
+       $this->itemEdit = false;
     }
+
+    //Deleting item
 
     public function deletingItem()
     {
@@ -104,9 +114,10 @@ class Items extends Component
         $item->delete();
         $this->itemDeleted = true;
         $this->confirmingItemDeletion = false;
+        session()->flash('message', 'Item Deleted successfully');
     }
 
-
+        //Adding item
     public function AddingItem()
     {
         $this->reset(['item']);
@@ -121,19 +132,43 @@ class Items extends Component
     public function saveItem()
     {
         $this->validate();
-        //Auth::id();
-        // Item::create([
-        //     'user_id' => Auth::id(),
-        //     'name' => $this->name,
-        //     'price' => $this->price,
-        //     'status' => $this->price ?? 0,
+        
+            Auth::user()->items()->create([
+               'name' => $this->name,
+               'price' => $this->price,
+               'status' => $this->status ?? 0,
+            ]);
+            $this->confirmingItemAddition = false;
+        session()->flash('message', 'Item Added successfully');
+    }
 
-        // ]);
-        Auth::user()->items()->create([
-            'name' => $this->name,
-            'price' => $this->price,
-            'status' => $this->status ?? 0,
-        ]);
-        $this->confirmingItemAddition = false;
+       //Editing item
+    public function EditingItem()
+    {
+        $this->confirmingItemEditing = true;
+    }
+
+    public function confirmItemEdition(Item $item)
+    {
+        $this->id = $item['id'];
+        $this->name = $item['name'];
+        $this->price = $item['price'];
+        $this->status = $item['status'];
+
+        $this->confirmingItemEditing = true;
+    }
+
+
+    public function saveEditItem(Item $item)
+    {
+        $item->save();
+        // $this->id = $item['id'];
+        // $this->name = $item['name'];
+        // $this->price = $item['price'];
+        // $this->status = $item['status'] ?? 0;
+
+        // $this->save();
+
+        $this->confirmingItemEditing = false;
     }
 }

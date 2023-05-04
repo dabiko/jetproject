@@ -11,7 +11,19 @@
         </p>
     </div>
 
+
     <div class="max-w-6xl mx-auto py-10 sm:px-6 lg:px-8">
+        @if (session()->has('message'))
+        <div class=" mb-5 border bg-blue-500 text-white px-4 py-3 rounded relative" role="alert" x-data="{show: true}" x-show="show">
+            <strong class="font-bold">{{ session('message')}}</strong>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <svg @click="show = false" class="fill-current h-6 w-6 text-white-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <title>Close</title>
+                    <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                </svg>
+            </span>
+        </div>
+        @endif
         <div class="block mb-5">
             <x-info-button wire:click="confirmItemAddition">
                 {{ __('Add Item') }}
@@ -96,11 +108,11 @@
 
                                     <td class=" flex px-6 py-4 whitespace-nowrap text-sm font-medium">
 
-                                        <x-info-button>
+                                        <x-info-button wire:click="confirmItemView( {{ $item->id }} )">
                                             <x-view-icon />
                                         </x-info-button>
 
-                                        <x-info-button>
+                                        <x-info-button wire:click="confirmItemEdition( {{ $item->id }} )">
                                             <x-edit-icon />
                                         </x-info-button>
 
@@ -124,7 +136,7 @@
     <!-- Add Item Confirmation Modal -->
     <x-dialog-modal wire:model="confirmingItemAddition">
         <x-slot name="title">
-            {{ __('Add New Item') }}
+            {{ ('Add New Item')}}
         </x-slot>
 
         <x-slot name="content">
@@ -145,7 +157,7 @@
             <!-- Status -->
             <div class="block mt-4">
                 <label for="active_only" class="flex items-center">
-                    <x-checkbox value="0" wire:model.defer="status" class="ml-90" id="status" name="status" />
+                    <x-checkbox wire:model.defer="status" class="ml-90" id="status" name="status" />
                     <span class="ml-2 text-sm text-gray-600">{{ __('Status') }}</span>
                     <x-input-error for="status" class="mt-2" />
                 </label>
@@ -164,10 +176,54 @@
         </x-slot>
     </x-dialog-modal>
 
+    <!-- Edit Item Confirmation Modal -->
+    <x-dialog-modal wire:model="confirmingItemEditing">
+        <x-slot name="title">
+            {{ ('Edit Item')}}
+        </x-slot>
+
+        <x-slot name="content">
+            <!-- Item Name -->
+            <div class="col-span-6 sm:col-span-4">
+                <x-label for="name" value="{{ __('Name') }}" />
+                <x-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="name" />
+                <x-input-error for="name" class="mt-2" />
+            </div>
+
+            <!-- Price -->
+            <div class="col-span-6 sm:col-span-4 mt-4">
+                <x-label for="price" value="{{ __('Price') }}" />
+                <x-input id="price" type="text" class="mt-1 block w-full" wire:model.defer="price" />
+                <x-input-error for="price" class="mt-2" />
+            </div>
+
+            <!-- Status -->
+            <div class="block mt-4">
+                <label for="active_only" class="flex items-center">
+                    <x-checkbox wire:model.defer="status" class="ml-90" id="status" name="status" />
+                    <span class="ml-2 text-sm text-gray-600">{{ __('Status') }}</span>
+                    <x-input-error for="status" class="mt-2" />
+                </label>
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+            <x-secondary-button wire:click="$toggle('confirmingItemEditing')" wire:loading.attr="disabled">
+                {{ __('Cancel') }}
+            </x-secondary-button>
+
+            <x-button class="ml-3" wire:click="saveEditItem( {{ $confirmingItemEditing }} )" wire:loading.attr="disabled">
+                {{ __('Edit') }}
+            </x-button>
+        </x-slot>
+    </x-dialog-modal>
+
+
 
 
     <!-- Delete Item Confirmation Modal -->
-    <x-dialog-modal wire:model="confirmingItemDeletion">
+    <x-confirmation-modal wire:model="confirmingItemDeletion">
         <x-slot name="title">
             {{ __('Delete Item') }}
         </x-slot>
@@ -185,6 +241,6 @@
                 {{ __('Delete Item') }}
             </x-danger-button>
         </x-slot>
-    </x-dialog-modal>
+    </x-confirmation-modal>
 
 </div>
