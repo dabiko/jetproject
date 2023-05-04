@@ -22,7 +22,6 @@ class Items extends Component
     public $confirmingItemAddition;
     public $itemAdd;
 
-    public $userId;
     public $name;
     public $price;
     public $status;
@@ -37,7 +36,7 @@ class Items extends Component
     protected $rules = [
         'name'  => 'required|string|min:4|max:50',
         'price' => 'required|numeric|between:1,100',
-        'status'  => 'boolean|integer',
+        'status'  => 'boolean' ,
     ];
 
 
@@ -123,20 +122,18 @@ class Items extends Component
     {
         $this->validate();
         //Auth::id();
-        DB::create([
-            'user_id' => $this->userId ?? 1,
+        // Item::create([
+        //     'user_id' => Auth::id(),
+        //     'name' => $this->name,
+        //     'price' => $this->price,
+        //     'status' => $this->price ?? 0,
+
+        // ]);
+        Auth::user()->items()->create([
             'name' => $this->name,
             'price' => $this->price,
-            'status' => $this->price ?? 0,
-            
+            'status' => $this->status ?? 0,
         ]);
-
-        // auth()->user()->items()->create([
-        
-        //     'name' => $this->item['name'],
-        //     'price' => $this->item['price'],
-        //     'status' => $this->item['status'] ?? 0,
-        // ]);
         $this->confirmingItemAddition = false;
     }
 }

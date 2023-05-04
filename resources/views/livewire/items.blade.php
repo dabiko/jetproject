@@ -145,16 +145,10 @@
             <!-- Status -->
             <div class="block mt-4">
                 <label for="active_only" class="flex items-center">
-                    <x-checkbox wire:model.defer="status" class="ml-90" id="status" name="status" />
+                    <x-checkbox value="0" wire:model.defer="status" class="ml-90" id="status" name="status" />
                     <span class="ml-2 text-sm text-gray-600">{{ __('Status') }}</span>
                     <x-input-error for="status" class="mt-2" />
                 </label>
-            </div>
-
-            <div class="col-span-6 sm:col-span-4 mt-4">
-                <x-label for="user_id" value="{{ __('User ID') }}" />
-                <x-input value="({{ $userId }})" id="user_id" type="text" class="mt-1 block w-full" wire:model.defer="user_id" />
-                <x-input-error for="user_id" class="mt-2" />
             </div>
 
         </x-slot>
