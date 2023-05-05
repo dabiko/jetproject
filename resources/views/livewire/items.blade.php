@@ -10,20 +10,19 @@
             Explain......
         </p>
     </div>
-
+    @if (session()->has('message'))
+    <div class="w-1/2 mb-0 mt-3 ml-80 content-center border bg-blue-500 text-white px-4 py-3 rounded relative" role="alert" x-data="{show: true}" x-show="show">
+        <strong class="font-bold">{{ session('message')}}</strong>
+        <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+            <svg @click="show = false" class="fill-current h-6 w-6 text-white-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <title>Close</title>
+                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+            </svg>
+        </span>
+    </div>
+    @endif
 
     <div class="max-w-6xl mx-auto py-10 sm:px-6 lg:px-8">
-        @if (session()->has('message'))
-        <div class=" mb-5 border bg-blue-500 text-white px-4 py-3 rounded relative" role="alert" x-data="{show: true}" x-show="show">
-            <strong class="font-bold">{{ session('message')}}</strong>
-            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                <svg @click="show = false" class="fill-current h-6 w-6 text-white-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                    <title>Close</title>
-                    <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-                </svg>
-            </span>
-        </div>
-        @endif
         <div class="block mb-5">
             <x-info-button wire:click="confirmItemAddition">
                 {{ __('Add Item') }}
@@ -115,6 +114,7 @@
                                         <x-info-button wire:click="confirmItemEdition( {{ $item->id }} )">
                                             <x-edit-icon />
                                         </x-info-button>
+                                        <button wire:click="$emit('openModal', 'confirmingItemEditing', {{ json_encode(['itemId' => $item->id]) }})">Edit User</button>
 
                                         <x-delete-button wire:click="confirmItemDeletion( {{ $item->id }} )">
                                             <x-delete-icon />
@@ -183,6 +183,12 @@
         </x-slot>
 
         <x-slot name="content">
+            <!-- Item Id -->
+            <div class="col-span-6 sm:col-span-4">
+                <x-label for="id" value="{{ __('Item Id') }}" />
+                <x-input id="id" type="text" class="mt-1 block w-full" wire:model.defer="id" />
+                <x-input-error for="id" class="mt-2" />
+            </div>
             <!-- Item Name -->
             <div class="col-span-6 sm:col-span-4">
                 <x-label for="name" value="{{ __('Name') }}" />
@@ -213,14 +219,11 @@
                 {{ __('Cancel') }}
             </x-secondary-button>
 
-            <x-button class="ml-3" wire:click="saveEditItem( {{ $confirmingItemEditing }} )" wire:loading.attr="disabled">
+            <x-button class="ml-3" wire:click="saveEditItem( {{ $confirmingItemEditing }})" wire:loading.attr="disabled">
                 {{ __('Edit') }}
             </x-button>
         </x-slot>
     </x-dialog-modal>
-
-
-
 
     <!-- Delete Item Confirmation Modal -->
     <x-confirmation-modal wire:model="confirmingItemDeletion">

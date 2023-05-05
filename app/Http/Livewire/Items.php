@@ -150,7 +150,7 @@ class Items extends Component
 
     public function confirmItemEdition(Item $item)
     {
-        $this->id = $item['id'];
+        //$this->id = $item['id'];
         $this->name = $item['name'];
         $this->price = $item['price'];
         $this->status = $item['status'];
@@ -159,16 +159,14 @@ class Items extends Component
     }
 
 
+ 
     public function saveEditItem(Item $item)
     {
-        $item->save();
-        // $this->id = $item['id'];
-        // $this->name = $item['name'];
-        // $this->price = $item['price'];
-        // $this->status = $item['status'] ?? 0;
+        $this->validate();
 
-        // $this->save();
 
+        $this->Item->save();
         $this->confirmingItemEditing = false;
+        session()->flash('message', 'Item Updated successfully'.'ID :.....');
     }
 }
