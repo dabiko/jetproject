@@ -114,7 +114,6 @@
                                         <x-info-button wire:click="confirmItemEdition( {{ $item->id }} )">
                                             <x-edit-icon />
                                         </x-info-button>
-                                        <button wire:click="$emit('openModal', 'confirmingItemEditing', {{ json_encode(['itemId' => $item->id]) }})">Edit User</button>
 
                                         <x-delete-button wire:click="confirmItemDeletion( {{ $item->id }} )">
                                             <x-delete-icon />

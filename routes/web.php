@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TasksController;
+use App\Http\Controllers\UrlController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +37,13 @@ Route::middleware([
         return view('tasks');
     })->name('tasks');
 
+    Route::get('/url-shortener', function () {
+        return view('url-shortener');
+    })->name('url-shortener');
+
+   
 });
+
+//Route::resource('url-shortener', UrlController::class);
 
 
